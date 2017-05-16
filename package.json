@@ -1,0 +1,46 @@
+{
+  "name": "n9-node-micro",
+  "version": "0.1.0",
+  "description": "Neo9 microservice module.",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/src"
+  ],
+  "scripts": {
+    "build": "rimraf dist/ && tsc",
+    "lint": "tslint src/*.ts",
+    "test": "npm run lint && npm run build && nyc --reporter=lcov ava --verbose --serial dist/test/",
+    "preversion": "npm test",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@scm.bytefactory.fr:2222/n9node/n9-node-conf.git"
+  },
+  "author": "Sebastien Chopin <sebastien.chopin@neo9.fr>",
+  "dependencies": {
+    "@types/body-parser": "^1.16.3",
+    "@types/express": "^4.0.35",
+    "@types/helmet": "^0.0.35",
+    "@types/morgan": "^1.7.32",
+    "app-root-dir": "^1.0.2",
+    "body-parser": "^1.17.1",
+    "debug": "^2.6.6",
+    "express": "^4.15.2",
+    "glob-promise": "^3.1.0",
+    "helmet": "^3.6.0",
+    "morgan": "^1.8.1",
+    "n9-node-log": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/debug": "^0.0.29",
+    "@types/node": "^7.0.18",
+    "ava": "^0.19.1",
+    "nyc": "^10.3.2",
+    "rimraf": "^2.6.1",
+    "std-mocks": "^1.0.1",
+    "tslint": "^5.2.0",
+    "typescript": "^2.3.2"
+  }
+}
