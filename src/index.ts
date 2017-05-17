@@ -5,10 +5,33 @@ import * as appRootDir from 'app-root-dir'
 
 import httpServer from './http'
 import initModules from './init'
+import loadRoutes from './routes'
 
-import { N9MicroOptions } from './index.d'
+import { Server } from 'http'
+import { Express } from 'express'
 
-export default async function(options?: N9MicroOptions) {
+export namespace N9Micro {
+
+	export interface Options {
+		path?: string
+		log?: N9Log
+		http?: {
+			logLevel?: 'dev'
+			port?: number
+		}
+	}
+
+	export interface HttpContext {
+		app: Express
+		server: Server
+		listen: () => Promise<{}>
+	}
+
+}
+
+export default async function(options?: N9Micro.Options) {
+	// Provides a stack trace for unhandled rejections instead of the default message string.
+	process.on('unhandledRejection', handleThrow)
 	// Options default
 	options = options || {}
 	options.path = options.path || join(appRootDir.get(), 'modules')
@@ -20,4 +43,15 @@ export default async function(options?: N9MicroOptions) {
 	const { app, server, listen } = await httpServer(options)
 	// Init every modules
 	await initModules(options, { app, server })
+	// Load routes
+	await loadRoutes(options, app)
+	// Make the server listen
+	await listen()
+	// Return app & server
+	return { app, server }
+}
+
+/* istanbul ignore next */
+function handleThrow(err) {
+	throw err
 }

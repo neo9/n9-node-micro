@@ -1,13 +1,15 @@
 import { join } from 'path'
 import * as glob from 'glob-promise'
 
-import { N9MicroOptions } from './index.d'
+import { N9Micro } from './index'
 
-export default async function({ path, log }: N9MicroOptions, context?) {
+export default async function({ path, log }: N9Micro.Options, { app, server }) {
 	const initFiles = await glob('**/*.init.+(ts|js)', { cwd: path })
 	await Promise.all(initFiles.map((file) => {
-		log.info(`Init module ${file.split('/')[0]}`)
-		const module = require(join(path, file))
-		return module.default ? module.default(context) : module(context)
+		const moduleName = file.split('/').slice(-2)[0]
+		log.info(`Init module ${moduleName}`)
+		let module = require(join(path, file))
+		module = module.default ? module.default : module
+		return module({ log, app, server })
 	}))
 }

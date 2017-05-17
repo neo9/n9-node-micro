@@ -15,7 +15,10 @@ npm install --save n9-node-micro
 Options:
 
 - path: `String`, default: `'./modules/'`
-- log: `Function`, default: `global.log`, need to be a [N9Log](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-log/browse) instance. If no one is found, will use debug.
+- log: `Function`, default: `global.log`, need to be a [N9Log](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-log/browse) instance. If no one is found, will use `new N9Log()`
+- http: `Object`, default: `{}`
+	- logLevel: `String`, default: `dev`, see [available levels](https://github.com/expressjs/morgan#predefined-formats)
+	- port: `Number`, default: `5000`
 
 
 ## Example
@@ -39,6 +42,113 @@ import n9Micro from 'n9-node-micro'
 })()
 ```
 
-## Logs
+## Modules init
 
-To display the logs of the module if no log exists (`global.log` or `log` option), use `DEBUG=n9-node-micro`.
+Every module can have a `*.init.(ts|js)` file wich exports a method. This method can be asynchronous (using `async` or returning a `Promise`), it reveices an object as argument with `log`, `app` and `server`.
+
+Example:
+
+`modules/io/io.init.ts`
+
+export default
+```ts
+import * as socketIO from 'socket.io'
+
+export default async function({ log, server }) {
+  log.info('Creating socket server')
+  global.io = socketIO(server)
+}
+```
+
+## Routes
+
+Format of route (`*.routes.ts`) should export an `Array` of `Object` with at least these properties:
+
+- method: `String`
+- path: `String`
+- handler: `Function` or `[Function]`
+
+Optional properties:
+
+- version: `String` or `[String]`, default: `'*'`
+- name: `String`, default: `handler.name`, for [n9-node-connector](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-connector/browse)
+- validate: `Object`, default: `{}`
+	- headers: [Joi Schema](https://github.com/hapijs/joi)
+	- params: [Joi Schema](https://github.com/hapijs/joi)
+	- query: [Joi Schema](https://github.com/hapijs/joi)
+	- body: [Joi Schema](https://github.com/hapijs/joi)
+- auth: *Coming soon*
+- acl: *Coming soon*
+- documentation: `Object`, default: `{}`
+	- description: `String`
+	- response: `Object`, example of response sent back
+
+Example :
+
+`modules/foo/foo.routes.js`
+
+```ts
+import * as Joi from 'joi'
+
+export default [
+  {
+    version: 'v1',
+    method: 'post',
+    path: '/foo',
+    validate: {
+      body: Joi.object().keys({
+        foo: Joi.boolean()
+      })
+    },
+    documentation: {
+      description: 'Foo route',
+      response: { ok: true }
+    },
+    handler: (req, res) => {
+      res.json({ ok: true })
+    }
+  }
+]
+```
+
+`server.ts`
+
+```ts
+import n9Micro from './src'
+
+(async () => {
+  await n9Micro()
+})()
+```
+
+If we go to [http://localhost:5000/routes](http://localhost:5000/routes), we will have:
+
+```json
+[
+  {
+    module: "foo",
+    name: "handler",
+    description: "Foo route",
+    version: "v1",
+    method: "post",
+    path: "/v1/foo",
+    auth: false,
+    acl: [ ],
+    validate: {
+      body: {
+        type: "object",
+        properties: {
+          foo: {
+            type: "boolean"
+          }
+        },
+        additionalProperties: false,
+        patterns: [ ]
+      }
+    },
+    response: {
+      ok: true
+    }
+  }
+]
+```

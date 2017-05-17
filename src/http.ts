@@ -5,7 +5,7 @@ import * as morgan from 'morgan'
 import * as helmet from 'helmet'
 import * as bodyParser from 'body-parser'
 
-import { N9Micro } from './index.d'
+import { N9Micro } from './index'
 
 export default async function(options: N9Micro.Options): Promise<N9Micro.HttpContext> {
 	// Default options
@@ -17,6 +17,7 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	const server = createServer(app)
 	// Listeners
 	const onError = (error) => {
+		/* istanbul ignore if */
 		if (error.syscall !== 'listen') {
 			throw error
 		}
@@ -27,9 +28,10 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 				process.exit(1)
 				break
 			case 'EADDRINUSE':
-				options.log.info(`Port ${options.http.port} is already in use`)
+				options.log.error(`Port ${options.http.port} is already in use`)
 				process.exit(1)
 				break
+			/* istanbul ignore next */
 			default:
 				throw error
 		}
@@ -60,5 +62,5 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	const stream = { write: (message) => options.log.info(message) }
 	app.use(morgan(options.http.logLevel, { stream }))
 	// Return app & server
-	return { app, server }
+	return { app, server, listen }
 }
