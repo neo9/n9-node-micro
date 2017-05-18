@@ -16,7 +16,7 @@ export namespace N9Micro {
 		path?: string
 		log?: N9Log
 		http?: {
-			logLevel?: 'dev'
+			logLevel?: string | false
 			port?: number
 		}
 	}

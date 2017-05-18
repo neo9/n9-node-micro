@@ -17,7 +17,7 @@ Options:
 - path: `String`, default: `'./modules/'`
 - log: `Function`, default: `global.log`, need to be a [N9Log](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-log/browse) instance. If no one is found, will use `new N9Log()`
 - http: `Object`, default: `{}`
-	- logLevel: `String`, default: `dev`, see [available levels](https://github.com/expressjs/morgan#predefined-formats)
+	- logLevel: `String` | `false`, default: `'dev'`, see [available levels](https://github.com/expressjs/morgan#predefined-formats)
 	- port: `Number`, default: `5000`
 
 
@@ -62,7 +62,7 @@ export default async function({ log, server }) {
 
 ## Routes
 
-Format of route (`*.routes.ts`) should export an `Array` of `Object` with at least these properties:
+Routes format (`*.routes.ts`) should export an `Array` of `Object` with at least these properties:
 
 - method: `String`
 - path: `String`
@@ -152,3 +152,17 @@ If we go to [http://localhost:5000/routes](http://localhost:5000/routes), we wil
   }
 ]
 ```
+
+## Application routes
+
+### GET - /
+
+Send back the application name (from `package.json`).
+
+### GET - /ping
+
+Send back status code 200 with text `pong`.
+
+### GET - /routes
+
+Send back the list of routes available for the microservice.

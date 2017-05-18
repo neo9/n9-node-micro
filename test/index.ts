@@ -241,7 +241,7 @@ test('Call routes with error in production (no leak)', async (t) => {
 
 test('Works with custom port', async (t) => {
 	stdMock.use()
-	const { app, server } = await n9Micro({ http: { port: 4000 }})
+	const { app, server } = await n9Micro({ http: { port: 4000 } })
 	stdMock.restore()
 	const output = stdMock.flush()
 	t.true(output.stdout[0].includes('Listening on port 4000'))
@@ -257,7 +257,7 @@ test('Works with custom log and should add a namespace', async (t) => {
 	const output = stdMock.flush()
 	t.true(output.stdout[0].includes('[custom:n9-node-micro] Listening on port 5000'))
 	// Close server
-	server.close()
+	await closeServer(server)
 })
 
 test('Works without params', async (t) => {
@@ -266,6 +266,39 @@ test('Works without params', async (t) => {
 	stdMock.restore()
 	const output = stdMock.flush()
 	t.true(output.stdout[0].includes('[n9-node-micro] Listening on port 5000'))
+	// Close server
+	await closeServer(server)
+})
+
+test('Should not log the requests http.logLevel=false', async (t) => {
+	stdMock.use()
+	const { server } = await(n9Micro({
+		http: { logLevel: false }
+	}))
+	await rp('http://localhost:5000/')
+	await rp('http://localhost:5000/ping')
+	await rp('http://localhost:5000/routes')
+	stdMock.restore()
+	const output = stdMock.flush()
+	t.is(output.stdout.length, 1)
+	// Close server
+	await closeServer(server)
+})
+
+test('Should log the requests with custom level', async (t) => {
+	stdMock.use()
+	const { server } = await(n9Micro({
+		http: { logLevel: ':status :url' }
+	}))
+	await rp('http://localhost:5000/')
+	await rp('http://localhost:5000/ping')
+	await rp('http://localhost:5000/routes')
+	stdMock.restore()
+	const output = stdMock.flush()
+	t.is(output.stdout.length, 4)
+	t.true(output.stdout[1].includes('200 /'))
+	t.true(output.stdout[2].includes('200 /ping'))
+	t.true(output.stdout[3].includes('200 /routes'))
 	// Close server
 	await closeServer(server)
 })
@@ -281,7 +314,7 @@ test('Fails with PORT without access', async (t) => {
 			resolve()
 		}
 	})
-	await n9Micro({ http: { port: 80 }})
+	await n9Micro({ http: { port: 80 } })
 	await processExit
 	stdMock.restore()
 	const output = stdMock.flush()
@@ -300,8 +333,8 @@ test('Fails with PORT already used', async (t) => {
 			resolve()
 		}
 	})
-	await n9Micro({ http: { port: 6000 }})
-	await n9Micro({ http: { port: 6000 }})
+	await n9Micro({ http: { port: 6000 } })
+	await n9Micro({ http: { port: 6000 } })
 	await processExit
 	stdMock.restore()
 	const output = stdMock.flush()
@@ -311,6 +344,6 @@ test('Fails with PORT already used', async (t) => {
 })
 
 test('Fails with PORT not in common range', async (t) => {
-	const err = await t.throws(n9Micro({ http: { port: 10000000 }}))
+	const err = await t.throws(n9Micro({ http: { port: 10000000 } }))
 	t.true(err.message.includes('port'))
 })

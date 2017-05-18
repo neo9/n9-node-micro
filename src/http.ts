@@ -11,7 +11,7 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	// Default options
 	options.http = options.http || {}
 	options.http.port = options.http.port || process.env.PORT || 5000
-	options.http.logLevel = options.http.logLevel || 'dev'
+	options.http.logLevel = (typeof options.http.logLevel !== 'undefined' ? options.http.logLevel : 'dev')
 	// Create server & helpers
 	const app = express()
 	const server = createServer(app)
@@ -60,7 +60,9 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	app.use(bodyParser.json())
 	// Logger middleware
 	const stream = { write: (message) => options.log.info(message) }
-	app.use(morgan(options.http.logLevel, { stream }))
+	if (typeof options.http.logLevel === 'string') {
+		app.use(morgan(options.http.logLevel, { stream }))
+	}
 	// Return app & server
 	return { app, server, listen }
 }
