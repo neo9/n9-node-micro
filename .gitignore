@@ -17,3 +17,4 @@ coverage
 
 # Sonar
 .scannerwork
+sonar-project.properties
