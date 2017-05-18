@@ -1,12 +1,13 @@
 import { existsSync } from 'fs'
 import { join } from 'path'
-import N9Log from 'n9-node-log'
+import n9Log from 'n9-node-log'
 import * as appRootDir from 'app-root-dir'
 
 import httpServer from './http'
 import initModules from './init'
 import loadRoutes from './routes'
 
+import { N9Log } from 'n9-node-log'
 import { Server } from 'http'
 import { Express } from 'express'
 
@@ -38,7 +39,7 @@ export default async function(options?: N9Micro.Options) {
 	options.log = options.log || global.log
 	// If log if given, add a namespace
 	if (options.log) options.log = options.log.module('n9-node-micro')
-	else options.log = new N9Log('n9-node-micro')
+	else options.log = n9Log('n9-node-micro')
 	// Create HTTP server
 	const { app, server, listen } = await httpServer(options)
 	// Init every modules

@@ -1,5 +1,5 @@
 import test from 'ava'
-import N9Log from 'n9-node-log'
+import n9Log from 'n9-node-log'
 import * as stdMock from 'std-mocks'
 import * as rp from 'request-promise-native'
 import { join } from 'path'
@@ -250,7 +250,7 @@ test('Works with custom port', async (t) => {
 })
 
 test('Works with custom log and should add a namespace', async (t) => {
-	const log = new N9Log('custom')
+	const log = n9Log('custom')
 	stdMock.use()
 	const { app, server } = await n9Micro({ log })
 	stdMock.restore()

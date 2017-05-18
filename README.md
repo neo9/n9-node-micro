@@ -15,7 +15,7 @@ npm install --save n9-node-micro
 Options:
 
 - path: `String`, default: `'./modules/'`
-- log: `Function`, default: `global.log`, need to be a [N9Log](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-log/browse) instance. If no one is found, will use `new N9Log()`
+- log: `Function`, default: `global.log`, need to be a [N9Log](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-log/browse) instance. If no one is found, will use `n9Log('n9-node-micro')`
 - http: `Object`, default: `{}`
 	- logLevel: `String` | `false`, default: `'dev'`, see [available levels](https://github.com/expressjs/morgan#predefined-formats)
 	- port: `Number`, default: `5000`
@@ -38,7 +38,7 @@ import N9Log from 'n9-node-log'
 import n9Micro from 'n9-node-micro'
 
 (async () => {
-  await n9Micro({ log: new N9Log('my-app') })
+  await n9Micro({ log: n9Log('my-app') })
 })()
 ```
 
