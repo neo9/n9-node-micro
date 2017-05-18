@@ -1,6 +1,6 @@
 import * as Joi from 'joi'
 
-import { ExtendableError } from '../../../../src/utils'
+import { N9Error } from 'n9-node-utils'
 
 module.exports = [
 	{
@@ -20,7 +20,7 @@ module.exports = [
 				if (req.query.error) {
 					if (req.params.version === 'v1')
 						return next(new Error('bar-error'))
-					return next(new ExtendableError('bar-extendable-error', 505, { test: true }))
+					return next(new N9Error('bar-extendable-error', 505, { test: true }))
 				}
 				res.json({ bar: 'foo' })
 			}

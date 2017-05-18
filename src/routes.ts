@@ -5,9 +5,9 @@ import * as joiToJson from 'joi-to-json-schema'
 import * as glob from 'glob-promise'
 import * as appRootDir from 'app-root-dir'
 import { Router, Express } from 'express'
+import { N9Error } from 'n9-node-utils'
 
 import { N9Micro } from './index'
-import { ExtendableError } from './utils'
 
 const METHODS = ['get', 'post', 'put', 'delete', 'head', 'patch', 'all']
 
@@ -100,7 +100,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 	})
 	// Handle 404 errors
 	app.use((req, res, next) => {
-		return next(new ExtendableError('not-found', 404, { url: req.url }))
+		return next(new N9Error('not-found', 404, { url: req.url }))
 	})
 	// Log error
 	app.use((err, req, res, next) => {
@@ -142,6 +142,6 @@ function versionning(version) {
 		if (version.includes(req.params.version)) {
 			return next()
 		}
-		next(new ExtendableError('version-not-supported', 400, { version }))
+		next(new N9Error('version-not-supported', 400, { version }))
 	}
 }

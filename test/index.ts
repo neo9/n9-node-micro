@@ -5,7 +5,6 @@ import * as rp from 'request-promise-native'
 import { join } from 'path'
 
 import n9Micro from '../src'
-import { ExtendableError } from '../src/utils'
 
 const pkg = require('../../package.json')
 
@@ -314,11 +313,4 @@ test('Fails with PORT already used', async (t) => {
 test('Fails with PORT not in common range', async (t) => {
 	const err = await t.throws(n9Micro({ http: { port: 10000000 }}))
 	t.true(err.message.includes('port'))
-})
-
-test('Utils ExtendableError', async (t) => {
-	const err = new ExtendableError('test')
-	t.is(err.message, 'test')
-	t.is(err.status, 500)
-	t.deepEqual(err.context, {})
 })
