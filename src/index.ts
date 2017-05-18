@@ -13,13 +13,15 @@ import { Express } from 'express'
 
 export namespace N9Micro {
 
+	export interface HttpOptions {
+		logLevel?: string | false
+		port?: number
+	}
+
 	export interface Options {
 		path?: string
 		log?: N9Log
-		http?: {
-			logLevel?: string | false
-			port?: number
-		}
+		http?: HttpOptions
 	}
 
 	export interface HttpContext {
