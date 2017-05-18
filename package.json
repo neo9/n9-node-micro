@@ -10,13 +10,19 @@
   "scripts": {
     "build": "rimraf dist/ && tsc",
     "lint": "tslint src/*.ts",
-    "test": "npm run lint && npm run build && nyc --reporter=lcov ava --verbose --serial dist/test/",
+    "test": "npm run lint && npm run build && nyc --reporter=lcov ava --verbose --serial dist/test/ && n9-sonar-generate",
     "preversion": "npm test",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "ssh://git@scm.bytefactory.fr:2222/n9node/n9-node-conf.git"
+  },
+  "sonar": {
+    "coverage.exclusions": "src/*.d.ts",
+    "ts.coverage.lcovReportPath": "./coverage/lcov.info",
+    "ts.tslint.path": "./node_modules/.bin/tslint",
+    "ts.tslint.configPath": "./tslint.json"
   },
   "author": "Sebastien Chopin <sebastien.chopin@neo9.fr>",
   "dependencies": {
@@ -41,6 +47,7 @@
     "@types/joi": "^10.3.2",
     "@types/node": "^7.0.18",
     "ava": "^0.19.1",
+    "n9-node-sonar-generate": "^0.1.0",
     "nyc": "^10.3.2",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
