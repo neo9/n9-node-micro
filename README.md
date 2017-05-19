@@ -77,7 +77,7 @@ Optional properties:
 	- params: [Joi Schema](https://github.com/hapijs/joi)
 	- query: [Joi Schema](https://github.com/hapijs/joi)
 	- body: [Joi Schema](https://github.com/hapijs/joi)
-- auth: `Boolean`, default: `false`, if true, will require `req.haders.user` to exists, parse it and set it to `req.user`
+- auth: `Boolean`, default: `false`, if true, will require `req.headers.user` to exists, parse it and set it to `req.user`
 - acl: `Array`, default: `[]`, list of permissions to access this route, if defined, `auth` will be set to `true`
 - documentation: `Object`, default: `{}`
 	- description: `String`
