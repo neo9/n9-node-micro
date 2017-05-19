@@ -56,12 +56,16 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			}
 			// Make sure r.handler is an array
 			r.handler = (!Array.isArray(r.handler)) ? [ r.handler ] : r.handler
-			// Handle versionning
-			r.handler.unshift(versionning(r.version))
-			// Add validation middleware validate schema defined
+			// Add validation middleware validate schema defined (3rd)
 			if (r.validate) {
 				r.handler.unshift(validate(r.validate))
 			}
+			// Handle auth (2nd)
+			if (r.auth) {
+				r.handler.unshift(auth)
+			}
+			// Handle versionning (1st)
+			r.handler.unshift(versionning(r.version))
 			// Add route in express app, see http://expressjs.com/fr/4x/api.html#router.route
 			r.method = String(r.method).toLowerCase()
 			moduleRouter.route(`/:version?${r.path}`)[r.method](r.handler)
@@ -144,4 +148,19 @@ function versionning(version) {
 		}
 		next(new N9Error('version-not-supported', 400, { version }))
 	}
+}
+
+function auth(req, res, next) {
+	if (!req.headers.user) {
+		return next(new N9Error('user-required', 401))
+	}
+	try {
+		req.user = JSON.parse(req.headers.user)
+	} catch (err) {
+		return next(new N9Error('user-header-is-invalid', 400))
+	}
+	if (!req.user.id) {
+		return next(new N9Error('user-header-has-no-id', 400))
+	}
+	next()
 }
