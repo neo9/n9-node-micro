@@ -33,27 +33,27 @@
     "express": "^4.15.3",
     "express-validation": "^1.0.2",
     "glob-promise": "^3.1.0",
-    "helmet": "^3.6.0",
-    "joi": "^10.4.2",
+    "helmet": "^3.6.1",
+    "joi": "^10.5.2",
     "joi-to-json-schema": "^3.0.0",
-    "morgan": "^1.8.1",
+    "morgan": "^1.8.2",
     "n9-node-log": "^2.0.0",
-    "n9-node-utils": "^1.0.1"
+    "n9-node-utils": "^1.4.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.3",
     "@types/debug": "^0.0.29",
     "@types/helmet": "^0.0.35",
     "@types/joi": "^10.3.2",
-    "@types/node": "^7.0.18",
+    "@types/node": "^7.0.23",
     "ava": "^0.19.1",
-    "n9-node-sonar-generate": "^1.0.0",
-    "nyc": "^10.3.2",
+    "n9-node-sonar-generate": "^1.0.1",
+    "nyc": "^11.0.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "rimraf": "^2.6.1",
     "std-mocks": "^1.0.1",
-    "tslint": "^5.2.0",
-    "typescript": "^2.3.2"
+    "tslint": "^5.4.0",
+    "typescript": "^2.3.4"
   }
 }

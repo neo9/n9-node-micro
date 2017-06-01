@@ -16,24 +16,20 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	const app = express()
 	const server = createServer(app)
 	// Listeners
-	const onError = (error) => {
+	const analyzeError = (error) => {
 		/* istanbul ignore if */
 		if (error.syscall !== 'listen') {
-			throw error
+			return error
 		}
 		// handle specific listen errors with friendly messages
 		switch (error.code) {
 			case 'EACCES':
-				options.log.error(`Port ${options.http.port} requires elevated privileges`)
-				process.exit(1)
-				break
+				return new Error(`Port ${options.http.port} requires elevated privileges`)
 			case 'EADDRINUSE':
-				options.log.error(`Port ${options.http.port} is already in use`)
-				process.exit(1)
-				break
+				return new Error(`Port ${options.http.port} is already in use`)
 			/* istanbul ignore next */
 			default:
-				throw error
+				return error
 		}
 	}
 	const onListening = () => {
@@ -42,11 +38,10 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	}
 	// Listen method
 	const listen = () => {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			server.listen(options.http.port)
 			server.on('error', (error) => {
-				onError(error)
-				resolve()
+				reject(analyzeError(error))
 			})
 			server.on('listening', () => {
 				onListening()

@@ -77,42 +77,20 @@ test('Should log the requests with custom level', async (t) => {
 
 test('Fails with PORT without access', async (t) => {
 	stdMock.use()
-	let exitCode = 0
-	const processExit = new Promise((resolve) => {
-		const oldExit = process.exit
-		process.exit = (code) => {
-			process.exit = oldExit
-			exitCode = code
-			resolve()
-		}
-	})
-	await n9Micro({ http: { port: 80 } })
-	await processExit
+	const err = await t.throws(n9Micro({ http: { port: 80 } }))
 	stdMock.restore()
-	const output = stdMock.flush()
-	t.is(exitCode, 1)
-	t.true(output.stderr.join(' ').includes('Port 80 requires elevated privileges'))
+	stdMock.flush()
+	t.true(err.message.includes('Port 80 requires elevated privileges'))
 })
 
 test('Fails with PORT already used', async (t) => {
 	stdMock.use()
-	let exitCode = 0
-	const processExit = new Promise((resolve) => {
-		const oldExit = process.exit
-		process.exit = (code) => {
-			process.exit = oldExit
-			exitCode = code
-			resolve()
-		}
-	})
 	await n9Micro({ http: { port: 6000 } })
-	await n9Micro({ http: { port: 6000 } })
-	await processExit
+	const err = await t.throws(n9Micro({ http: { port: 6000 } }))
 	stdMock.restore()
 	const output = stdMock.flush()
-	t.is(exitCode, 1)
 	t.true(output.stdout[0].includes('Listening on port 6000'))
-	t.true(output.stderr.join(' ').includes('Port 6000 is already in use'))
+	t.true(err.message.includes('Port 6000 is already in use'))
 })
 
 test('Fails with PORT not in common range', async (t) => {
