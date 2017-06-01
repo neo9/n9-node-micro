@@ -64,10 +64,10 @@ test('Check /routes', async (t) => {
 	stdMock.use()
 	const { app, server } = await n9Micro({
 		path: MICRO_FOO,
-		http: { port: 5555 }
+		http: { port: 5575 }
 	})
 	// Check /foo route added on foo/foo.init.ts
-	const res = await rp({ uri: 'http://localhost:5555/routes', resolveWithFullResponse: true, json: true })
+	const res = await rp({ uri: 'http://localhost:5575/routes', resolveWithFullResponse: true, json: true })
 	t.is(res.statusCode, 200)
 	t.is(res.body.length, 4)
 	const route1 = res.body[0]

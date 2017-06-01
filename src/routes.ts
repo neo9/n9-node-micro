@@ -77,6 +77,8 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 		routes = routes.concat(...moduleRoutes.map((r) => {
 			// Force version to be an array
 			const versions = (!Array.isArray(r.version) ? [ r.version || '*' ] : r.version)
+			const acl = r.acl || {}
+			acl.perms = acl.perms || []
 			// Force documentation key to be defined
 			r.documentation = r.documentation || {}
 			// Return a route definition for each version
@@ -90,7 +92,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 					method: r.method,
 					path: (version !== '*' ? `/${version}${r.path}` : r.path),
 					auth: r.auth || false,
-					acl: r.acl || [],
+					acl,
 					validate: {
 						headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
 						params: r.validate && r.validate.params ? joiToJson(r.validate.params) : undefined,
