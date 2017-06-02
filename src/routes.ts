@@ -108,17 +108,11 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 	app.use((req, res, next) => {
 		return next(new N9Error('not-found', 404, { url: req.url }))
 	})
-	// Log error
-	app.use((err, req, res, next) => {
-		if (err.status && err.status >= 500) {
-			log.error(err)
-		}
-		next(err)
-	})
 	// Development error handler will print stacktrace
 	/* istanbul ignore else */
 	if (app.get('env') === 'development') {
 		app.use((err, req, res, next) => {
+			log.error(err)
 			res.status(err.status || 500)
 			res.json({
 				code: err.message,
@@ -128,6 +122,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 	}
 	// Production error handler: no stacktraces leaked to user
 	app.use((err, req, res, next) => {
+		log.error(err)
 		res.status(err.status || 500)
 		res.json({
 			code: err.message,
