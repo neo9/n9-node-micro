@@ -64,7 +64,7 @@ export default async function({ log, server }) {
 
 Routes format (`*.routes.ts`) should export an `Array` of `Object` with at least these properties:
 
-- method: `String`
+- method: `String` or `[String]`
 - path: `String`
 - handler: `Function` or `[Function]`
 

@@ -1,10 +1,10 @@
 export default [
 	{
-		method: 'POST',
+		method: ['POST', 'put'],
 		path: '/users',
 		auth: true,
 		handler(req, res) {
-			res.json(req.user)
+			res.json(req.session)
 		}
 	}
 ]

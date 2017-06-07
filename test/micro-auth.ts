@@ -21,7 +21,7 @@ test('Call route with auth=true', async (t) => {
 		http: { port: 6001 }
 	})
 	/*
-	** Fails with no `user` header
+	** Fails with no `session` header
 	*/
 	let err = await t.throws(rp({
 		method: 'POST',
@@ -30,50 +30,36 @@ test('Call route with auth=true', async (t) => {
 		json: true
 	}))
 	t.is(err.statusCode, 401)
-	t.is(err.response.body.code, 'user-required')
+	t.is(err.response.body.code, 'session-required')
 	/*
-	** Fails with bad `user` header
+	** Fails with bad `session` header
 	*/
 	err = await t.throws(rp({
-		method: 'POST',
+		method: 'PUT',
 		uri: 'http://localhost:6001/users',
 		headers: {
-			user: 'bad'
+			session: 'bad'
 		},
 		resolveWithFullResponse: true,
 		json: true
 	}))
 	t.is(err.statusCode, 400)
-	t.is(err.response.body.code, 'user-header-is-invalid')
+	t.is(err.response.body.code, 'session-header-is-invalid')
 	/*
-	** Fails with bad `user` header (no user.id)
+	** Good `session` header
 	*/
-	err = await t.throws(rp({
-		method: 'POST',
-		uri: 'http://localhost:6001/users',
-		headers: {
-			user: JSON.stringify({ noId: true })
-		},
-		resolveWithFullResponse: true,
-		json: true
-	}))
-	t.is(err.statusCode, 400)
-	t.is(err.response.body.code, 'user-header-has-no-id')
-	/*
-	** Good `user` header
-	*/
-	const user = { id: 1, name: 'Bruce Wayne' }
+	const session = { id: 1, name: 'Bruce Wayne' }
 	const res = await rp({
 		method: 'POST',
 		uri: 'http://localhost:6001/users',
 		headers: {
-			user: JSON.stringify(user)
+			session: JSON.stringify(session)
 		},
 		resolveWithFullResponse: true,
 		json: true
 	})
 	t.is(res.statusCode, 200)
-	t.deepEqual(res.body, user)
+	t.deepEqual(res.body, session)
 	// Clear stdout
 	stdMock.restore()
 	stdMock.flush()

@@ -46,16 +46,26 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 				log.error(`Module [${moduleName}]: Route with index [${index}] must have a \`path\` defined.`)
 				return false
 			}
-			if (!r.method || METHODS.indexOf(String(r.method).toLowerCase()) === -1) {
+			if (!r.method) {
+				log.error(`Module [${moduleName}]: Route ${r.path} must have a valid \`method\` (${METHODS.join(', ')})`)
+				return false
+			}
+			r.method = (!Array.isArray(r.method) ? [ r.method ] : r.method).map((method) => String(method).toLowerCase())
+			let validMethod = true
+			r.method.forEach((method) => {
+				if (METHODS.indexOf(String(method).toLowerCase()) === -1)
+					validMethod = false
+			})
+			if (!validMethod) {
 				log.error(`Module [${moduleName}]: Route ${r.path} must have a valid \`method\` (${METHODS.join(', ')})`)
 				return false
 			}
 			if (!r.handler) {
-				log.error(`Module [${moduleName}]: Route ${r.method.toUpperCase()} - ${r.path} must have a \`handler\` attached`)
+				log.error(`Module [${moduleName}]: Route ${r.method.join('/').toUpperCase()} - ${r.path} must have a \`handler\` attached`)
 				return false
 			}
 			// Make sure r.handler is an array
-			r.handler = (!Array.isArray(r.handler)) ? [ r.handler ] : r.handler
+			r.handler = (!Array.isArray(r.handler) ? [ r.handler ] : r.handler)
 			// Add validation middleware validate schema defined (3rd)
 			if (r.validate) {
 				r.handler.unshift(validate(r.validate))
@@ -67,8 +77,9 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			// Handle versionning (1st)
 			r.handler.unshift(versionning(r.version))
 			// Add route in express app, see http://expressjs.com/fr/4x/api.html#router.route
-			r.method = String(r.method).toLowerCase()
-			moduleRouter.route(`/:version?${r.path}`)[r.method](r.handler)
+			r.method.forEach((method) => {
+				moduleRouter.route(`/:version?${r.path}`)[method](r.handler)
+			})
 			return true
 		})
 		// Add module routes to the app
@@ -82,26 +93,28 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			// Force documentation key to be defined
 			r.documentation = r.documentation || {}
 			// Return a route definition for each version
-			return versions.map((version) => {
-				const module = routeFile.split('/')[0]
-				return {
-					module,
-					name: (r.name || r.handler[r.handler.length - 1].name || `${r.method}${module[0].toUpperCase()}${module.slice(1)}`),
-					description: r.documentation.description || '',
-					version,
-					method: r.method,
-					path: (version !== '*' ? `/${version}${r.path}` : r.path),
-					auth: r.auth || false,
-					acl,
-					validate: {
-						headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
-						params: r.validate && r.validate.params ? joiToJson(r.validate.params) : undefined,
-						query: r.validate && r.validate.query ? joiToJson(r.validate.query) : undefined,
-						body: r.validate && r.validate.body ? joiToJson(r.validate.body) : undefined
-					},
-					response: r.documentation.response
-				}
-			})
+			return [].concat(...versions.map((version) => {
+				return r.method.map((method) => {
+					const module = routeFile.split('/')[0]
+					return {
+						module,
+						name: (r.name || r.handler[r.handler.length - 1].name || `${r.method}${module[0].toUpperCase()}${module.slice(1)}`),
+						description: r.documentation.description || '',
+						version,
+						method,
+						path: (version !== '*' ? `/${version}${r.path}` : r.path),
+						auth: r.auth || false,
+						acl,
+						validate: {
+							headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
+							params: r.validate && r.validate.params ? joiToJson(r.validate.params) : undefined,
+							query: r.validate && r.validate.query ? joiToJson(r.validate.query) : undefined,
+							body: r.validate && r.validate.body ? joiToJson(r.validate.body) : undefined
+						},
+						response: r.documentation.response
+					}
+				})
+			}))
 		}))
 	})
 	// Handle 404 errors
@@ -148,16 +161,13 @@ function versionning(version) {
 }
 
 function auth(req, res, next) {
-	if (!req.headers.user) {
-		return next(new N9Error('user-required', 401))
+	if (!req.headers.session) {
+		return next(new N9Error('session-required', 401))
 	}
 	try {
-		req.user = JSON.parse(req.headers.user)
+		req.session = JSON.parse(req.headers.session)
 	} catch (err) {
-		return next(new N9Error('user-header-is-invalid', 400))
-	}
-	if (!req.user.id) {
-		return next(new N9Error('user-header-has-no-id', 400))
+		return next(new N9Error('session-header-is-invalid', 400))
 	}
 	next()
 }
