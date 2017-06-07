@@ -21,7 +21,7 @@ export default [
 		// Should log error because no path defined
 	},
 	{
-		 // Should log error because not method defined
+		// Should log error because not method defined
 		path: '/foo'
 	},
 	{
