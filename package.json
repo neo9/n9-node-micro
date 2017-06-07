@@ -1,6 +1,6 @@
 {
   "name": "n9-node-micro",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Neo9 Node MicroService Module",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
