@@ -77,6 +77,7 @@ Optional properties:
 - version: `String` or `[String]`, default: `'*'`
 - name: `String`, default: `handler.name`, for [n9-node-connector](http://scm.bytefactory.fr/projects/N9NODE/repos/n9-node-connector/browse)
 - validate: `Object`, default: `{}`
+	- options: See [Express Validation Options](https://github.com/AndrewKeig/express-validation#unknown-schema-fields---strict-checking), by default `allowUnknown*` are set to `false`
 	- headers: [Joi Schema](https://github.com/hapijs/joi)
 	- params: [Joi Schema](https://github.com/hapijs/joi)
 	- query: [Joi Schema](https://github.com/hapijs/joi)

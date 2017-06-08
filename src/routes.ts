@@ -11,6 +11,15 @@ import { N9Micro } from './index'
 
 const METHODS = ['get', 'post', 'put', 'delete', 'head', 'patch', 'all']
 
+// Force allowUnkown as false
+validate.options({
+	allowUnknownHeaders: false,
+	allowUnknownBody: false,
+	allowUnknownQuery: false,
+	allowUnknownParams: false,
+	allowUnknownCookies: false
+})
+
 export default async function({ path, log }: N9Micro.Options, app: Express) {
 	// Fetch application name
 	const name = require(join(appRootDir.get(), 'package.json')).name
