@@ -11,6 +11,7 @@ module.exports = [
 			body: Joi.object().keys({
 				bar: Joi.boolean().equal(true)
 			}),
+			cookies: Joi.object(),
 			headers: Joi.object(),
 			query: Joi.object(),
 			params: Joi.object()

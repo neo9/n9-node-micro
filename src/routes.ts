@@ -13,11 +13,11 @@ const METHODS = ['get', 'post', 'put', 'delete', 'head', 'patch', 'all']
 
 // Force allowUnkown as false
 validate.options({
-	allowUnknownHeaders: false,
+	allowUnknownHeaders: true,
 	allowUnknownBody: false,
 	allowUnknownQuery: false,
-	allowUnknownParams: false,
-	allowUnknownCookies: false
+	allowUnknownParams: true,
+	allowUnknownCookies: true
 })
 
 export default async function({ path, log }: N9Micro.Options, app: Express) {
@@ -131,6 +131,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 						acl,
 						validate: {
 							headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
+							cookies: r.validate && r.validate.headers ? joiToJson(r.validate.cookies) : undefined,
 							params: r.validate && r.validate.params ? joiToJson(r.validate.params) : undefined,
 							query: r.validate && r.validate.query ? joiToJson(r.validate.query) : undefined,
 							body: r.validate && r.validate.body ? joiToJson(r.validate.body) : undefined

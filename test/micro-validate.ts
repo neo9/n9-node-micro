@@ -34,7 +34,19 @@ test('Check allowUnkown', async (t) => {
 	t.is(err.statusCode, 400)
 	t.true(err.response.body.error.errors[0].messages.join(' ').includes('is not allowed'))
 	// Should allow others keys
-	const res = await rp({
+	let res = await rp({
+		method: 'POST',
+		uri: 'http://localhost:5585/validate',
+		resolveWithFullResponse: true,
+		body: {
+			username: 'ok'
+		},
+		json: true
+	})
+	t.is(res.statusCode, 200)
+	t.true(res.body.ok)
+	// Should allow others keys
+	res = await rp({
 		method: 'POST',
 		uri: 'http://localhost:5585/validate-ok',
 		resolveWithFullResponse: true,
