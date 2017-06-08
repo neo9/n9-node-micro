@@ -64,18 +64,33 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 				log.error(`Module [${moduleName}]: Route ${r.method.join('/').toUpperCase()} - ${r.path} must have a \`handler\` attached`)
 				return false
 			}
+			// Create real handler
+			const handler = []
 			// Make sure r.handler is an array
 			r.handler = (!Array.isArray(r.handler) ? [ r.handler ] : r.handler)
+			// Overwrite r.name before overwritting the handler
+			r.name = r.name || r.handler[r.handler.length - 1].name
+			// Make sure there is a try/catch for each controller to avoid crashing the server
+			r.handler = r.handler.map((fn) => {
+				return async (req, res, next) => {
+					try {
+						await fn(req, res, next)
+					} catch (err) {
+						next(err)
+					}
+				}
+			})
+			// Handle versionning (1st)
+			handler.push(versionning(r.version))
+			// Handle authentication (2nd)
+			if (r.session) {
+				handler.push(authentication(r.session))
+			}
 			// Add validation middleware validate schema defined (3rd)
 			if (r.validate) {
-				r.handler.unshift(validate(r.validate))
+				handler.push(validate(r.validate))
 			}
-			// Handle auth (2nd)
-			if (r.auth) {
-				r.handler.unshift(auth)
-			}
-			// Handle versionning (1st)
-			r.handler.unshift(versionning(r.version))
+			r.handler = [ ...handler, ...r.handler ]
 			// Add route in express app, see http://expressjs.com/fr/4x/api.html#router.route
 			r.method.forEach((method) => {
 				moduleRouter.route(`/:version?${r.path}`)[method](r.handler)
@@ -98,12 +113,12 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 					const module = routeFile.split('/')[0]
 					return {
 						module,
-						name: (r.name || r.handler[r.handler.length - 1].name || `${r.method}${module[0].toUpperCase()}${module.slice(1)}`),
+						name: r.name || `${r.method}${module[0].toUpperCase()}${module.slice(1)}`,
 						description: r.documentation.description || '',
 						version,
 						method,
 						path: (version !== '*' ? `/${version}${r.path}` : r.path),
-						auth: r.auth || false,
+						session: r.session || false,
 						acl,
 						validate: {
 							headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
@@ -160,14 +175,23 @@ function versionning(version) {
 	}
 }
 
-function auth(req, res, next) {
-	if (!req.headers.session) {
-		return next(new N9Error('session-required', 401))
+function authentication(options) {
+	let getToken
+	let type = 'require'
+	if (typeof options === 'object') {
+		if (['load', 'require'].indexOf(options.type) !== -1) {
+			type = options.type
+		}
+		getToken = options.getToken
 	}
-	try {
-		req.session = JSON.parse(req.headers.session)
-	} catch (err) {
-		return next(new N9Error('session-header-is-invalid', 400))
+	return async (req, res, next) => {
+		try {
+			await req.loadSession(getToken)
+		} catch (err) {
+			if (type === 'require') {
+				return next(err)
+			}
+		}
+		next()
 	}
-	next()
 }
