@@ -26,5 +26,12 @@ module.exports = [
 				res.json({ bar: 'foo' })
 			}
 		]
+	},
+	{
+		method: 'GET',
+		path: '/bar-fail',
+		handler(req, res) {
+			throw new Error()
+		}
 	}
 ]

@@ -150,21 +150,38 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 	/* istanbul ignore else */
 	if (app.get('env') === 'development') {
 		app.use((err, req, res, next) => {
-			log.error(err)
-			res.status(err.status || 500)
+			const status = err.status || 500
+			const code = err.message || 'unspecified-error'
+			const context = err.context || {}
+			if (status < 500) {
+				log.warn(err)
+			} else {
+				log.error(err)
+			}
+			res.status(status)
 			res.json({
-				code: err.message,
+				code,
+				status,
+				context,
 				error: err
 			})
 		})
 	}
 	// Production error handler: no stacktraces leaked to user
 	app.use((err, req, res, next) => {
-		log.error(err)
-		res.status(err.status || 500)
+		const status = err.status || 500
+		const code = err.message || 'unspecified-error'
+		const context = err.context || {}
+		if (status < 500) {
+			log.warn(err)
+		} else {
+			log.error(err)
+		}
+		res.status(status)
 		res.json({
-			code: err.message,
-			error: {}
+			code,
+			status,
+			context
 		})
 	})
 }
