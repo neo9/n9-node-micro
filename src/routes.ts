@@ -102,7 +102,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			r.handler = [ ...handler, ...r.handler ]
 			// Add route in express app, see http://expressjs.com/fr/4x/api.html#router.route
 			r.method.forEach((method) => {
-				moduleRouter.route(`/:version?${r.path}`)[method](r.handler)
+				moduleRouter.route(`/:version(v\\d+)?${r.path}`)[method](r.handler)
 			})
 			return true
 		})

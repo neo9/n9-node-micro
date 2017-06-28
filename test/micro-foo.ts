@@ -276,6 +276,16 @@ test('Call routes with error in production (no leak)', async (t) => {
 		},
 		// no error key
 	})
+	// Should send back 404
+	err = await t.throws(rp({
+		method: 'POST',
+		uri: 'http://localhost:5587/no-version/bar',
+		qs: { error: true },
+		body: {},
+		resolveWithFullResponse: true,
+		json: true
+	}))
+	t.is(err.statusCode, 404)
 	// Call 404
 	err = await t.throws(rp({
 		method: 'GET',
