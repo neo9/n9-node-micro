@@ -48,7 +48,7 @@
     "@types/helmet": "^0.0.35",
     "@types/joi": "^10.4.0",
     "@types/node": "^7.0.29",
-    "ava": "^0.19.1",
+    "ava": "^0.20.0",
     "n9-node-sonar-generate": "^1.0.1",
     "nyc": "^11.0.2",
     "request": "^2.81.0",

@@ -172,9 +172,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 		const status = err.status || 500
 		const code = err.message || 'unspecified-error'
 		const context = err.context || {}
-		if (status < 500) {
-			log.warn(err)
-		} else {
+		if (status >= 500) {
 			log.error(err)
 		}
 		res.status(status)
