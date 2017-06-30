@@ -17,7 +17,7 @@ export namespace N9Micro {
 
 	export interface HttpOptions {
 		logLevel?: string | false
-		port?: number
+		port?: number | string
 	}
 
 	export interface JWTOptions {
