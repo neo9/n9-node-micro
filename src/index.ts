@@ -21,6 +21,7 @@ export namespace N9Micro {
 	}
 
 	export interface JWTOptions {
+		headerKey?: string
 		secret?: string
 		expiresIn?: number | string
 	}
@@ -50,6 +51,7 @@ export default async function(options?: N9Micro.Options) {
 	options.log = options.log || global.log
 	options.hasProxy = (typeof options.hasProxy === 'boolean' ? options.hasProxy : true)
 	options.jwt = options.jwt || {}
+	options.jwt.headerKey = options.jwt.headerKey || 'Authorization'
 	options.jwt.secret = options.jwt.secret || 'secret'
 	options.jwt.expiresIn = options.jwt.expiresIn || '7d'
 	// If log if given, add a namespace

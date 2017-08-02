@@ -15,16 +15,17 @@ async function generateJWT(req, session: any): Promise<string> {
 ** Load the session into req.session
 */
 async function loadSession(req, getToken?: (req) => string): Promise<void> {
+	const headerKey = this.jwt.headerKey.toLowerCase()
 	// Get token
 	let token
 	if (typeof getToken === 'function') {
 		token = getToken(req)
-	} else if (req.headers && req.headers.authorization) {
-		const parts = req.headers.authorization.split(' ')
+	} else if (req.headers && req.headers[headerKey]) {
+		const parts = req.headers[headerKey].split(' ')
 		if (parts.length === 2 && /^Bearer$/i.test(parts[0])) {
 			token = parts[1]
 		} else {
-			throw new N9Error('credentials-bad-schema', 401, { message: 'Format is Authorization: Bearer [token]' })
+			throw new N9Error('credentials-bad-schema', 401, { message: `Format is ${headerKey}: Bearer [token]` })
 		}
 	}
 	token = sanitizeToken(token)

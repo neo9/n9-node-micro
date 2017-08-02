@@ -26,16 +26,16 @@
   },
   "author": "Sebastien Chopin <sebastien.chopin@neo9.fr>",
   "dependencies": {
-    "@types/express": "^4.0.35",
-    "@types/jsonwebtoken": "^7.2.1",
+    "@types/express": "^4.0.36",
+    "@types/jsonwebtoken": "^7.2.2",
     "@types/morgan": "^1.7.32",
     "app-root-dir": "^1.0.2",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-validation": "^1.0.2",
     "glob-promise": "^3.1.0",
-    "helmet": "^3.6.1",
-    "joi": "^10.5.2",
+    "helmet": "^3.8.1",
+    "joi": "^10.6.0",
     "joi-to-json-schema": "^3.0.0",
     "jsonwebtoken": "^7.4.1",
     "morgan": "^1.8.2",
@@ -43,19 +43,19 @@
     "n9-node-utils": "^1.4.0"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.16.3",
+    "@types/body-parser": "^1.16.4",
     "@types/debug": "^0.0.29",
     "@types/helmet": "^0.0.35",
     "@types/joi": "^10.4.0",
-    "@types/node": "^8.0.6",
-    "ava": "^0.20.0",
+    "@types/node": "^8.0.19",
+    "ava": "^0.21.0",
     "n9-node-sonar-generate": "^1.0.1",
-    "nyc": "^11.0.2",
+    "nyc": "^11.1.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "rimraf": "^2.6.1",
     "std-mocks": "^1.0.1",
-    "tslint": "^5.4.3",
-    "typescript": "^2.3.4"
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
   }
 }
