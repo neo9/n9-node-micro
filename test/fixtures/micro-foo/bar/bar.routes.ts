@@ -1,6 +1,6 @@
 import * as Joi from 'joi'
 
-import { N9Error } from 'n9-node-utils'
+import { N9Error } from '@neo9/n9-node-utils'
 
 module.exports = [
 	{

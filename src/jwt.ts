@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken'
-import { cb, N9Error } from 'n9-node-utils'
+import { cb, N9Error } from '@neo9/n9-node-utils'
 
 async function generateJWT(req, session: any): Promise<string> {
 	if (!session) {

@@ -5,7 +5,7 @@ import * as joiToJson from 'joi-to-json-schema'
 import * as glob from 'glob-promise'
 import * as appRootDir from 'app-root-dir'
 import { Router, Express } from 'express'
-import { N9Error } from 'n9-node-utils'
+import { N9Error } from '@neo9/n9-node-utils'
 
 import { N9Micro } from './index'
 

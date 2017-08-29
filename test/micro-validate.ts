@@ -1,5 +1,5 @@
 import test from 'ava'
-import n9Log from 'n9-node-log'
+import n9Log from '@neo9/n9-node-log'
 import * as stdMock from 'std-mocks'
 import * as rp from 'request-promise-native'
 import { join } from 'path'

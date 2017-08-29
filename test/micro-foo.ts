@@ -1,5 +1,5 @@
 import test from 'ava'
-import n9Log from 'n9-node-log'
+import n9Log from '@neo9/n9-node-log'
 import * as stdMock from 'std-mocks'
 import * as rp from 'request-promise-native'
 import { join } from 'path'
@@ -26,7 +26,7 @@ test('Basic usage, create http server', async (t) => {
 	// Check / route
 	res = await rp({ uri: 'http://localhost:5000/', resolveWithFullResponse: true })
 	t.is(res.statusCode, 200)
-	t.is(res.body, 'n9-node-micro')
+	t.is(res.body, '@neo9/n9-node-micro')
 	// Check /ping route
 	res = await rp({ uri: 'http://localhost:5000/ping', resolveWithFullResponse: true })
 	t.is(res.statusCode, 200)

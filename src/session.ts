@@ -1,4 +1,4 @@
-import { N9Error } from 'n9-node-utils'
+import { N9Error } from '@neo9/n9-node-utils'
 
 /*
 ** Parse `req.headers.session`

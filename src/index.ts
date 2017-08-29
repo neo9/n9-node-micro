@@ -1,6 +1,6 @@
 import { existsSync } from 'fs'
 import { join } from 'path'
-import n9Log from 'n9-node-log'
+import n9Log from '@neo9/n9-node-log'
 import * as appRootDir from 'app-root-dir'
 
 import httpServer from './http'
@@ -9,7 +9,7 @@ import loadRoutes from './routes'
 import jwtMiddleware from './jwt'
 import sessionMiddleware from './session'
 
-import { N9Log } from 'n9-node-log'
+import { N9Log } from '@neo9/n9-node-log'
 import { Server } from 'http'
 import { Express } from 'express'
 
