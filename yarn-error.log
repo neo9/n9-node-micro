@@ -1,0 +1,96 @@
+Arguments: 
+  /home/schopin/.nvm/versions/node/v7.8.0/bin/node /usr/share/yarn/bin/yarn.js
+
+PATH: 
+  /home/schopin/.nvm/versions/node/v7.8.0/bin:/home/schopin/.sdkman/candidates/gradle/current/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/schopin/Applications/sonarqube/bin/linux-x86-64:/home/schopin/Applications/sonar-scanner/bin
+
+Yarn version: 
+  0.24.6
+
+Node version: 
+  7.8.0
+
+Platform: 
+  linux x64
+
+npm manifest: 
+  {
+    "name": "n9-node-micro",
+    "version": "4.2.1",
+    "description": "Neo9 Node MicroService Module",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "files": [
+      "dist/src"
+    ],
+    "scripts": {
+      "build": "rimraf dist/ && tsc",
+      "lint": "tslint src/*.ts",
+      "test": "npm run lint && npm run build && nyc --reporter=lcov ava --verbose --serial dist/test/ && n9-sonar-generate",
+      "preversion": "npm test",
+      "prepublish": "npm run build"
+    },
+    "repository": {
+      "type": "git",
+      "url": "ssh://git@scm.bytefactory.fr:2222/n9node/n9-node-conf.git"
+    },
+    "sonar": {
+      "coverage.exclusions": "src/*.d.ts",
+      "ts.coverage.lcovReportPath": "./coverage/lcov.info",
+      "ts.tslint.path": "./node_modules/.bin/tslint",
+      "ts.tslint.configPath": "./tslint.json"
+    },
+    "author": "Sebastien Chopin <sebastien.chopin@neo9.fr>",
+    "dependencies": {
+      "@types/express": "^4.0.36",
+      "@types/jsonwebtoken": "^7.2.2",
+      "@types/morgan": "^1.7.32",
+      "app-root-dir": "^1.0.2",
+      "body-parser": "^1.17.2",
+      "express": "^4.15.3",
+      "express-validation": "^1.0.2",
+      "glob-promise": "^3.1.0",
+      "helmet": "^3.8.1",
+      "joi": "^10.6.0",
+      "joi-to-json-schema": "^3.0.0",
+      "jsonwebtoken": "^7.4.1",
+      "morgan": "^1.8.2",
+      "n9-node-log": "^2.0.0",
+      "n9-node-utils": "^1.4.0"
+    },
+    "devDependencies": {
+      "@types/body-parser": "^1.16.4",
+      "@types/debug": "^0.0.29",
+      "@types/helmet": "^0.0.35",
+      "@types/joi": "^10.4.0",
+      "@types/node": "^8.0.19",
+      "ava": "^0.21.0",
+      "n9-node-sonar-generate": "^1.0.1",
+      "nyc": "^11.1.0",
+      "request": "^2.81.0",
+      "request-promise-native": "^1.0.4",
+      "rimraf": "^2.6.1",
+      "std-mocks": "^1.0.1",
+      "tslint": "^5.5.0",
+      "typescript": "^2.4.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: https://npm.neo9.pro/repository/npm-global/n9-node-log: Not found
+      at Request.params.callback [as _callback] (/usr/share/yarn/lib/yarn-cli.js:56255:18)
+      at Request.self.callback (/usr/share/yarn/lib/yarn-cli.js:107854:22)
+      at emitTwo (events.js:106:13)
+      at Request.emit (events.js:194:7)
+      at Request.<anonymous> (/usr/share/yarn/lib/yarn-cli.js:108837:10)
+      at emitOne (events.js:96:13)
+      at Request.emit (events.js:191:7)
+      at Gunzip.<anonymous> (/usr/share/yarn/lib/yarn-cli.js:108757:12)
+      at Object.onceWrapper (events.js:293:19)
+      at emitNone (events.js:91:20)
