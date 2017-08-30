@@ -1,11 +1,16 @@
 # n9-node-micro
 
-Neo9 microservice module: init every module, create the express server, add the required routes (/, /ping & /routes) & module routes.
+Node microservice module: init every module, create an express server, add the required routes (/, /ping & /routes) & module routes.
+
+[![npm version](https://img.shields.io/npm/v/@neo9/n9-node-micro.svg)](https://www.npmjs.com/package/@neo9/n9-node-micro)
+[![Travis](https://img.shields.io/travis/neo9/n9-node-micro/master.svg)](https://travis-ci.org/neo9/n9-node-micro)
+[![Coverage](https://img.shields.io/codecov/c/github/neo9/n9-node-micro/master.svg)](https://codecov.io/gh/neo9/n9-node-micro)
+[![license](https://img.shields.io/github/license/neo9/n9-node-micro.svg)](https://github.com/neo9/n9-node-micro/blob/master/LICENSE)
 
 ## Installation
 
 ```bash
-npm install --save n9-node-micro
+npm install --save @neo9/n9-node-micro
 ```
 
 ## Usage
@@ -38,8 +43,8 @@ server.ts
 `server.ts`
 
 ```ts
-import N9Log from 'n9-node-log'
-import n9Micro from 'n9-node-micro'
+import n9Log from '@neo9/n9-node-log'
+import n9Micro from '@neo9/n9-node-micro'
 
 (async () => {
   await n9Micro({ log: n9Log('my-app') })
@@ -125,7 +130,7 @@ export default [
 `server.ts`
 
 ```ts
-import n9Micro from './src'
+import n9Micro from '@neo9/n9-node-micro'
 
 (async () => {
   await n9Micro()
@@ -134,23 +139,23 @@ import n9Micro from './src'
 
 If we go to [http://localhost:5000/routes](http://localhost:5000/routes), we will have:
 
-```json
+```js
 [
   {
-    module: "foo",
-    name: "handler",
-    description: "Foo route",
-    version: "v1",
-    method: "post",
-    path: "/v1/foo",
-    auth: false,
+    module: 'foo',
+    name: 'handler',
+    description: 'Foo route',
+    version: 'v1',
+    method: 'post',
+    path: '/v1/foo',
+    session: false,
     acl: [ ],
     validate: {
       body: {
-        type: "object",
+        type: 'object',
         properties: {
           foo: {
-            type: "boolean"
+            type: 'boolean'
           }
         },
         additionalProperties: false,

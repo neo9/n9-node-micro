@@ -1,28 +1,28 @@
 {
   "name": "@neo9/n9-node-micro",
   "version": "4.3.0",
-  "description": "Neo9 Node MicroService Module",
+  "description": "Node MicroService Module",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "files": [
     "dist/src"
   ],
+  "nyc": {
+    "include": [
+      "dist/src/"
+    ]
+  },
   "scripts": {
     "build": "rimraf dist/ && tsc",
     "lint": "tslint src/*.ts",
-    "test": "npm run lint && npm run build && nyc --reporter=lcov ava --verbose --serial dist/test/ && n9-sonar-generate",
+    "test": "npm run lint && npm run build && nyc ava --verbose --serial dist/test/ && nyc report --reporter=html",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "preversion": "npm test",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@scm.bytefactory.fr:2222/n9node/n9-node-conf.git"
-  },
-  "sonar": {
-    "coverage.exclusions": "src/*.d.ts",
-    "ts.coverage.lcovReportPath": "./coverage/lcov.info",
-    "ts.tslint.path": "./node_modules/.bin/tslint",
-    "ts.tslint.configPath": "./tslint.json"
+    "url": "git+https://github.com/neo9/n9-node-micro"
   },
   "author": "Sebastien Chopin <sebastien.chopin@neo9.fr>",
   "dependencies": {
@@ -39,17 +39,17 @@
     "joi-to-json-schema": "^3.0.0",
     "jsonwebtoken": "^7.4.3",
     "morgan": "^1.8.2",
-    "@neo9/n9-node-log": "^2.3.0",
-    "@neo9/n9-node-utils": "^1.5.0"
+    "@neo9/n9-node-log": "^2.3.1",
+    "@neo9/n9-node-utils": "^1.4.4"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.5",
     "@types/debug": "^0.0.30",
     "@types/helmet": "^0.0.36",
     "@types/joi": "^10.4.1",
-    "@types/node": "^8.0.25",
+    "@types/node": "^8.0.26",
     "ava": "^0.22.0",
-    "@neo9/n9-node-sonar-generate": "^1.1.0",
+    "codecov": "^2.3.0",
     "nyc": "^11.1.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
