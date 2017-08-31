@@ -7,6 +7,7 @@ import httpServer from './http'
 import initModules from './init'
 import loadRoutes from './routes'
 import jwtMiddleware from './jwt'
+export { jwt } from './jwt'
 import sessionMiddleware from './session'
 
 import { N9Log } from '@neo9/n9-node-log'

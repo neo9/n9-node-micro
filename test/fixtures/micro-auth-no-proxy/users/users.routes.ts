@@ -1,4 +1,4 @@
-import { generateJWT } from '../../../../src/jwt'
+import { jwt } from '../../../../src/'
 
 export default [
 	{
@@ -15,7 +15,7 @@ export default [
 		path: '/session',
 		async handler(req, res) {
 			res.json({
-				token: await generateJWT(req.body)
+				token: await jwt.generateJWT(req.body)
 			})
 		}
 	},
