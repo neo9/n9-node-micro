@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken'
 import { cb, N9Error } from '@neo9/n9-node-utils'
 
-async function generateJWT(req, session: any): Promise<string> {
+export let generateJWT = async function(session: any): Promise<string> {
 	if (!session) {
 		throw new N9Error('session-is-empty', 400)
 	}
@@ -14,7 +14,7 @@ async function generateJWT(req, session: any): Promise<string> {
 /*
 ** Load the session into req.session
 */
-async function loadSession(req, getToken?: (req) => string): Promise<void> {
+export let loadSession = async function(req, getToken?: (req) => string): Promise<void> {
 	const headerKey = this.jwt.headerKey.toLowerCase()
 	// Get token
 	let token
@@ -57,9 +57,11 @@ function sanitizeToken(token: string) {
 }
 
 export default function(options, app) {
+	generateJWT = generateJWT.bind(options)
+	loadSession = loadSession.bind(options)
 	// Add first middleware to add JWT support
 	app.use((req, res, next) => {
-		req.generateJWT = generateJWT.bind(options, req)
+		req.generateJWT = generateJWT.bind(options)
 		req.loadSession = loadSession.bind(options, req)
 		next()
 	})
