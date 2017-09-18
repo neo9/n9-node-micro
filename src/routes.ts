@@ -89,8 +89,6 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 					}
 				}
 			})
-			// Handle versionning (1st)
-			handler.push(versionning(r.version))
 			// Handle authentication (2nd)
 			if (r.session) {
 				handler.push(authentication(r.session))
@@ -102,7 +100,14 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			r.handler = [ ...handler, ...r.handler ]
 			// Add route in express app, see http://expressjs.com/fr/4x/api.html#router.route
 			r.method.forEach((method) => {
-				moduleRouter.route(`/:version(v\\d+)?${r.path}`)[method](r.handler)
+				let v = Array.isArray(r.version) ? r.version.join('|') : (r.version || '*')
+				let optional = ''
+				// If no version defined or accept any version
+				if (v === '*') {
+					v = 'v\\d+'
+					optional = '?'
+				}
+				moduleRouter.route(`/:version(${v})${optional}${r.path}`)[method](r.handler)
 			})
 			return true
 		})
@@ -182,22 +187,6 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			context
 		})
 	})
-}
-
-function versionning(version) {
-	return (req, res, next) => {
-		// If no version defined for the route, ignore actual version
-		if (!version) {
-			return next()
-		}
-		// Force version to be an array
-		version = (!Array.isArray(version) ? [ version ] : version)
-		// Check if param version is matching the route version(s)
-		if (version.includes(req.params.version)) {
-			return next()
-		}
-		next(new N9Error('version-not-supported', 400, { version }))
-	}
 }
 
 function authentication(options) {

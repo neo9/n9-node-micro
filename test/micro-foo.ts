@@ -123,11 +123,11 @@ test('Call routes (versionning)', async (t) => {
 	stdMock.use()
 	const { app, server } = await n9Micro({
 		path: MICRO_FOO,
-		http: { port: 5556 }
+		http: { port: 5559 }
 	})
 	let res = await rp({
 		method: 'POST',
-		uri: 'http://localhost:5556/v1/bar',
+		uri: 'http://localhost:5559/v1/bar',
 		body: {},
 		resolveWithFullResponse: true,
 		json: true
@@ -137,7 +137,7 @@ test('Call routes (versionning)', async (t) => {
 	// Call /v1/fou
 	res = await rp({
 		method: 'POST',
-		uri: 'http://localhost:5556/v1/fou',
+		uri: 'http://localhost:5559/v1/fou',
 		body: { hi: 'hello' },
 		resolveWithFullResponse: true,
 		json: true
@@ -147,7 +147,7 @@ test('Call routes (versionning)', async (t) => {
 	// Call special route which fails
 	let err = await t.throws(rp({
 		method: 'POST',
-		uri: 'http://localhost:5556/v1/bar',
+		uri: 'http://localhost:5559/v1/bar',
 		qs: { error: true },
 		body: {},
 		resolveWithFullResponse: true,
@@ -158,7 +158,7 @@ test('Call routes (versionning)', async (t) => {
 	// Call special route which fails with extendable error
 	err = await t.throws(rp({
 		method: 'POST',
-		uri: 'http://localhost:5556/v2/bar',
+		uri: 'http://localhost:5559/v2/bar',
 		qs: { error: true },
 		body: {},
 		resolveWithFullResponse: true,
@@ -189,10 +189,9 @@ test('Call routes (bad versions)', async (t) => {
 		resolveWithFullResponse: true,
 		json: true
 	}))
-	t.is(err.statusCode, 400)
-	t.is(err.response.body.code, 'version-not-supported')
-	t.is(err.response.body.error.status, 400)
-	t.deepEqual(err.response.body.error.context.version, ['v1', 'v2'])
+	t.is(err.statusCode, 404)
+	t.is(err.response.body.code, 'not-found')
+	t.is(err.response.body.error.status, 404)
 	// Call a route with version not specified
 	const res = await rp({
 		method: 'POST',
