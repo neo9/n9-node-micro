@@ -52,7 +52,7 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	// Middleware
 	app.use(helmet())
 	options.http.bodyParser = options.http.bodyParser || {}
-	app.use(bodyParser.urlencoded(Object.assign({ extended: true }, options.http.bodyParser.urlencoded)))
+	app.use(bodyParser.urlencoded(Object.assign({ extended: false }, options.http.bodyParser.urlencoded)))
 	app.use(bodyParser.json(options.http.bodyParser.json))
 	// Logger middleware
 	if (typeof options.http.logLevel === 'string') {
