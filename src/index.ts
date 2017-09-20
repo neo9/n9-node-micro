@@ -16,9 +16,15 @@ import { Express } from 'express'
 
 export namespace N9Micro {
 
+	export interface BodyParserOptions {
+		json?: any,
+		urlencoded?: any
+	}
+
 	export interface HttpOptions {
 		logLevel?: string | false
-		port?: number | string
+		port?: number | string,
+		bodyParser?: BodyParserOptions
 	}
 
 	export interface JWTOptions {
