@@ -25,6 +25,7 @@ Options:
 - http: `Object`, default: `{}`
 	- logLevel: `String` | `false`, default: `'dev'`, see [available levels](https://github.com/expressjs/morgan#predefined-formats)
 	- port: `Number`, default: `5000`
+	- preventListen: `Boolean`, default: `false`
 - jwt: `Object`, default: `{ secret: 'secret', expiredIn: '7d' }`, only when `hasProxy: false`
 	- secret: `String`, default `'secret'`
 	- expiredIn: `String`, default `'7d'`

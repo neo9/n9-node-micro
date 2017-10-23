@@ -25,6 +25,7 @@ export namespace N9Micro {
 		logLevel?: string | false
 		port?: number | string,
 		bodyParser?: BodyParserOptions
+		preventListen?: boolean
 	}
 
 	export interface JWTOptions {
@@ -78,7 +79,7 @@ export default async function(options?: N9Micro.Options) {
 	// Load routes
 	await loadRoutes(options, app)
 	// Make the server listen
-	await listen()
+	if (!options.http.preventListen) await listen()
 	// Return app & server
 	return { app, server }
 }

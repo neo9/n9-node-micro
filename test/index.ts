@@ -21,6 +21,17 @@ test('Works with custom port', async (t) => {
 	await closeServer(server)
 })
 
+test('Works with preventListen = true', async (t) => {
+	stdMock.use()
+	const { app, server } = await n9Micro({ http: { port: 4002, preventListen: true } })
+	stdMock.restore()
+	const output = stdMock.flush()
+	t.is(output.stdout.length, 0)
+	t.is(output.stderr.length, 0)
+	const err = await t.throws(rp('http://localhost:4200'))
+	t.is(err.name, 'RequestError')
+})
+
 test('Works with custom log and should add a namespace', async (t) => {
 	const log = n9Log('custom')
 	stdMock.use()
