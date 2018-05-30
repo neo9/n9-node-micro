@@ -95,7 +95,8 @@ Optional properties:
 	- query: [Joi Schema](https://github.com/hapijs/joi)
 	- body: [Joi Schema](https://github.com/hapijs/joi)
 - session: `Boolean` or `Object`, default: `false`, see **Authentication** below for more informations.
-- acl: `Object`, default: `{ perms: [] }`, list of permissions to access this route
+- can: `Object`, check [imperium](https://github.com/mono-js/imperium) can middleware for usage
+- is: `Array<string>` | `string`, check [imperium](https://github.com/mono-js/imperium) is middleware
 - documentation: `Object`, default: `{}`
 	- description: `String`
 	- response: `Object`, example of response sent back
