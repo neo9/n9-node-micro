@@ -20,7 +20,7 @@ validate.options({
 	allowUnknownCookies: true
 })
 
-export default async function({ path, log }: N9Micro.Options, app: Express) {
+export default async function ({ path, log }: N9Micro.Options, app: Express) {
 	// Fetch application name
 	const name = require(join(appRootDir.get(), 'package.json')).name
 	// Create the routes list
@@ -59,7 +59,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 				log.error(`Module [${moduleName}]: Route ${r.path} must have a valid \`method\` (${METHODS.join(', ')})`)
 				return false
 			}
-			r.method = (!Array.isArray(r.method) ? [ r.method ] : r.method).map((method) => String(method).toLowerCase())
+			r.method = (!Array.isArray(r.method) ? [r.method] : r.method).map((method) => String(method).toLowerCase())
 			let validMethod = true
 			r.method.forEach((method) => {
 				if (METHODS.indexOf(String(method).toLowerCase()) === -1)
@@ -76,7 +76,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			// Create real handler
 			const handler = []
 			// Make sure r.handler is an array
-			r.handler = (!Array.isArray(r.handler) ? [ r.handler ] : r.handler)
+			r.handler = (!Array.isArray(r.handler) ? [r.handler] : r.handler)
 			// Overwrite r.name before overwritting the handler
 			r.name = r.name || r.handler[r.handler.length - 1].name
 			// Make sure there is a try/catch for each controller to avoid crashing the server
@@ -97,7 +97,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 			if (r.validate) {
 				handler.push(validate(r.validate))
 			}
-			r.handler = [ ...handler, ...r.handler ]
+			r.handler = [...handler, ...r.handler]
 			// Add route in express app, see http://expressjs.com/fr/4x/api.html#router.route
 			r.method.forEach((method) => {
 				let v = Array.isArray(r.version) ? r.version.join('|') : (r.version || '*')
@@ -116,9 +116,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 		// Add routes definitions to /routes
 		routes = routes.concat(...moduleRoutes.map((r) => {
 			// Force version to be an array
-			const versions = (!Array.isArray(r.version) ? [ r.version || '*' ] : r.version)
-			const acl = r.acl || {}
-			acl.perms = acl.perms || []
+			const versions = (!Array.isArray(r.version) ? [r.version || '*'] : r.version)
 			// Force documentation key to be defined
 			r.documentation = r.documentation || {}
 			// Return a route definition for each version
@@ -133,7 +131,8 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 						method,
 						path: (version !== '*' ? `/${version}${r.path}` : r.path),
 						session: r.session || false,
-						acl,
+						can: r.can || false, // Add acl can route info
+						is: r.is || false, // Add acl is route info
 						validate: {
 							headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
 							cookies: r.validate && r.validate.headers ? joiToJson(r.validate.cookies) : undefined,
