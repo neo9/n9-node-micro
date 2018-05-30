@@ -20,7 +20,7 @@ validate.options({
 	allowUnknownCookies: true
 })
 
-export default async function ({ path, log }: N9Micro.Options, app: Express) {
+export default async function({ path, log }: N9Micro.Options, app: Express) {
 	// Fetch application name
 	const name = require(join(appRootDir.get(), 'package.json')).name
 	// Create the routes list
