@@ -20,7 +20,7 @@ validate.options({
 	allowUnknownCookies: true
 })
 
-export default async function({ path, log }: N9Micro.Options, app: Express) {
+export default async function ({ path, log }: N9Micro.Options, app: Express) {
 	// Fetch application name
 	const name = require(join(appRootDir.get(), 'package.json')).name
 	// Create the routes list
@@ -133,6 +133,7 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 						session: r.session || false,
 						can: r.can || false, // Add acl can route info
 						is: r.is || false, // Add acl is route info
+						withAcl: r.withAcl || false, // Populate acl object on response
 						validate: {
 							headers: r.validate && r.validate.headers ? joiToJson(r.validate.headers) : undefined,
 							cookies: r.validate && r.validate.headers ? joiToJson(r.validate.cookies) : undefined,

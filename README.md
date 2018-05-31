@@ -97,6 +97,7 @@ Optional properties:
 - session: `Boolean` or `Object`, default: `false`, see **Authentication** below for more informations.
 - can: `Object`, check [imperium](https://github.com/mono-js/imperium) can middleware for usage
 - is: `Array<string>` | `string`, check [imperium](https://github.com/mono-js/imperium) is middleware
+- withAcl: `Boolean` default: `false`, ask for acl actions to be injected to the response object. Check [imperium](https://github.com/mono-js/imperium) for more information
 - documentation: `Object`, default: `{}`
 	- description: `String`
 	- response: `Object`, example of response sent back
