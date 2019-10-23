@@ -1,4 +1,3 @@
-import { existsSync } from 'fs'
 import { join } from 'path'
 import n9Log from '@neo9/n9-node-log'
 import * as appRootDir from 'app-root-dir'
@@ -23,7 +22,7 @@ export namespace N9Micro {
 
 	export interface HttpOptions {
 		logLevel?: string | false
-		port?: number | string,
+		port?: number | string
 		bodyParser?: BodyParserOptions
 		preventListen?: boolean
 	}
@@ -40,6 +39,7 @@ export namespace N9Micro {
 		log?: N9Log
 		http?: HttpOptions
 		jwt?: JWTOptions
+		enableRequestId?: boolean
 	}
 
 	export interface HttpContext {
