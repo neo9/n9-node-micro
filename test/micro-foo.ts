@@ -17,7 +17,7 @@ const MICRO_FOO = join(__dirname, 'fixtures/micro-foo/')
 test('Basic usage, create http server', async (t) => {
 	stdMock.use()
 	const { app, server } = await n9Micro({
-		path: MICRO_FOO
+		path: MICRO_FOO, enableLogFormatJSON: false
 	})
 	// Check /foo route added on foo/foo.init.ts
 	let res = await rp({ uri: 'http://localhost:5000/foo', resolveWithFullResponse: true, json: true })

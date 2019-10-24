@@ -40,6 +40,7 @@ export namespace N9Micro {
 		http?: HttpOptions
 		jwt?: JWTOptions
 		enableRequestId?: boolean
+		enableLogFormatJSON?: boolean
 	}
 
 	export interface HttpContext {
@@ -62,6 +63,9 @@ export default async function(options?: N9Micro.Options) {
 	options.jwt.headerKey = options.jwt.headerKey || 'Authorization'
 	options.jwt.secret = options.jwt.secret || 'secret'
 	options.jwt.expiresIn = options.jwt.expiresIn || '7d'
+	const developmentEnv = (process.env.NODE_ENV && process.env.NODE_ENV === 'development')
+	options.enableLogFormatJSON = typeof options.enableLogFormatJSON === 'boolean' ? options.enableLogFormatJSON : !developmentEnv
+
 	// If log if given, add a namespace
 	if (options.log) options.log = options.log.module('n9-node-micro')
 	else options.log = n9Log('n9-node-micro')
