@@ -12,7 +12,6 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	// Default options
 	options.http = options.http || {}
 	options.http.port = options.http.port || process.env.PORT || 5000
-	options.http.logLevel = (typeof options.http.logLevel !== 'undefined' ? options.http.logLevel : 'dev')
 
 	// Create server & helpers
 	const app = express()
@@ -68,7 +67,7 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	})
 
 	options.http.logLevel = (typeof options.http.logLevel !== 'undefined' ? options.http.logLevel : (tokens, req, res) => {
-		const formatLogInJSON = global.log.options.formatJSON
+		const formatLogInJSON = options.enableLogFormatJSON
 
 		if (formatLogInJSON) {
 			return JSON.stringify({
@@ -102,7 +101,7 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 		app.use(morgan(options.http.logLevel as any, {
 			stream: {
 					write: (message) => {
-							if (global.log && global.log.options && global.log.options.formatJSON) {
+							if (options.enableLogFormatJSON) {
 									try {
 											const morganDetails = JSON.parse(message)
 											options.log.info('api call ' + morganDetails.path, morganDetails)

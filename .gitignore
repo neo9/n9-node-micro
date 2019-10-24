@@ -4,7 +4,7 @@ node_modules
 # Build
 dist
 
-./history
+.history
 
 # Logs
 npm-debug.log
