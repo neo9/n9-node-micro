@@ -107,7 +107,7 @@ test('Fails with PORT already used', async (t) => {
 test('Fails with PORT not in common range', async (t) => {
 	stdMock.use()
 	const err = await t.throws(n9Micro({ http: { port: 10000000 } }))
-	t.true(err.message.includes('port'))
+	t.true(err.message.includes('ort'))
 	stdMock.restore()
 	stdMock.flush()
 })
