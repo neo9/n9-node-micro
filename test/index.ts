@@ -55,7 +55,7 @@ test('Works without params', async (t) => {
 
 test('Should not log the requests http.logLevel=false', async (t) => {
 	stdMock.use()
-	const { server } = await(n9Micro({
+	const { server } = await (n9Micro({
 		http: { logLevel: false }
 	}))
 	await rp('http://localhost:5000/')
@@ -70,7 +70,7 @@ test('Should not log the requests http.logLevel=false', async (t) => {
 
 test('Should log the requests with custom level', async (t) => {
 	stdMock.use()
-	const { server } = await(n9Micro({
+	const { server } = await (n9Micro({
 		http: { logLevel: ':status :url' }
 	}))
 	await rp('http://localhost:5000/')
