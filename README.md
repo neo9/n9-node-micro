@@ -29,7 +29,12 @@ Options:
 - jwt: `Object`, default: `{ secret: 'secret', expiredIn: '7d' }`, only when `hasProxy: false`
 	- secret: `String`, default `'secret'`
 	- expiredIn: `String`, default `'7d'`
-
+- prometheus `Object`, default: `{}`
+  - port: `Number`
+  - labels?: `String[]`
+  - getLabelValues?: `Function`
+  - accuracies?: `String[]`
+  - skip?: `Function`
 
 ## Example
 

@@ -6,12 +6,13 @@ import httpServer from './http'
 import initModules from './init'
 import loadRoutes from './routes'
 import jwtMiddleware from './jwt'
+
 export { jwt } from './jwt'
 import sessionMiddleware from './session'
 
 import { N9Log } from '@neo9/n9-node-log'
 import { Server } from 'http'
-import { Express } from 'express'
+import { Express, Request, Response } from 'express'
 
 export namespace N9Micro {
 
@@ -33,6 +34,14 @@ export namespace N9Micro {
 		expiresIn?: number | string
 	}
 
+	export interface PrometheusOptions {
+		port: number
+		labels?: string[]
+		getLabelValues?: (req: Request, res: Response) => { [label: string]: string }
+		accuracies?: string[]
+		skip?: (req: Request, res: Response, labels: string[]) => boolean
+	}
+
 	export interface Options {
 		hasProxy?: boolean
 		path?: string
@@ -41,6 +50,7 @@ export namespace N9Micro {
 		jwt?: JWTOptions
 		enableRequestId?: boolean
 		enableLogFormatJSON?: boolean
+		prometheus?: PrometheusOptions
 	}
 
 	export interface HttpContext {
@@ -63,6 +73,8 @@ export default async function(options?: N9Micro.Options) {
 	options.jwt.headerKey = options.jwt.headerKey || 'Authorization'
 	options.jwt.secret = options.jwt.secret || 'secret'
 	options.jwt.expiresIn = options.jwt.expiresIn || '7d'
+	options.prometheus = options.prometheus || undefined
+
 	const developmentEnv = (process.env.NODE_ENV && process.env.NODE_ENV === 'development')
 	options.enableLogFormatJSON = typeof options.enableLogFormatJSON === 'boolean' ? options.enableLogFormatJSON : !developmentEnv
 

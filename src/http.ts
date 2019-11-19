@@ -5,6 +5,8 @@ import * as morgan from 'morgan'
 import * as helmet from 'helmet'
 import * as bodyParser from 'body-parser'
 import stringify from 'fast-safe-stringify'
+import { signalIsUp } from '@promster/express'
+import promotheusMiddleware from './prometheus'
 
 import { N9Micro } from './index'
 
@@ -37,6 +39,7 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 
 	const onListening = () => {
 		const addr = server.address()
+		if (options.prometheus) signalIsUp()
 		options.log.info('Listening on port ' + addr.port)
 	}
 
@@ -71,21 +74,21 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 
 		if (formatLogInJSON) {
 			return JSON.stringify({
-					'method': tokens.method(req, res),
-					'request-id': options.enableRequestId ? `(${req.headers['x-request-id']})` : '',
-					'path': tokens.url(req, res),
-					'status': tokens.status(req, res),
-					'durationMs': Number.parseFloat(tokens['response-time'](req, res)),
-					'totalDurationMs': Number.parseFloat(tokens['total-response-time'](req, res)),
-					'content-length': tokens.res(req, res, 'content-length')
+				'method': tokens.method(req, res),
+				'request-id': options.enableRequestId ? `(${req.headers['x-request-id']})` : '',
+				'path': tokens.url(req, res),
+				'status': tokens.status(req, res),
+				'durationMs': Number.parseFloat(tokens['response-time'](req, res)),
+				'totalDurationMs': Number.parseFloat(tokens['total-response-time'](req, res)),
+				'content-length': tokens.res(req, res, 'content-length')
 			})
 		} else {
 			return [
-					tokens.method(req, res),
-					tokens.url(req, res),
-					tokens.status(req, res),
-					tokens['response-time'](req, res), 'ms - ',
-					tokens.res(req, res, 'content-length')
+				tokens.method(req, res),
+				tokens.url(req, res),
+				tokens.status(req, res),
+				tokens['response-time'](req, res), 'ms - ',
+				tokens.res(req, res, 'content-length')
 			].join(' ')
 		}
 	}) as any
@@ -96,25 +99,28 @@ export default async function(options: N9Micro.Options): Promise<N9Micro.HttpCon
 	app.use(bodyParser.urlencoded(Object.assign({ extended: false }, options.http.bodyParser.urlencoded)))
 	app.use(bodyParser.json(options.http.bodyParser.json))
 
+	if (options.prometheus) await promotheusMiddleware(options, app)
+
 	// Logger middleware
 	if (options.http.logLevel) {
 		app.use(morgan(options.http.logLevel as any, {
 			stream: {
-					write: (message) => {
-							if (options.enableLogFormatJSON) {
-									try {
-											const morganDetails = JSON.parse(message)
-											options.log.info('api call ' + morganDetails.path, morganDetails)
-									} catch (e) {
-											message = message && message.replace('\n', '')
-											options.log.info(message, { errString: stringify(e) })
-									}
-							} else {
-									message = message && message.replace('\n', '')
-									options.log.info(message)
-							}
+				write: (message) => {
+					if (options.enableLogFormatJSON) {
+						try {
+							const morganDetails = JSON.parse(message)
+							options.log.info('api call ' + morganDetails.path, morganDetails)
+						} catch (e) {
+							message = message && message.replace('\n', '')
+							options.log.info(message, { errString: stringify(e) })
+						}
+					} else {
+						message = message && message.replace('\n', '')
+						options.log.info(message)
 					}
-			}})
+				}
+			}
+		})
 		)
 	}
 
