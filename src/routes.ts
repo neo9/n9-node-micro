@@ -177,14 +177,15 @@ export default async function({ path, log }: N9Micro.Options, app: Express) {
 		const status = err.status || 500
 		const code = err.message || 'unspecified-error'
 		const context = err.context || {}
-		if (status >= 500) {
+		if (status >= 500 || status === 400) {
 			log.error(err)
 		}
 		res.status(status)
 		res.json({
 			code,
 			status,
-			context
+			context,
+			error: status === 400 ? err : undefined
 		})
 	})
 }
