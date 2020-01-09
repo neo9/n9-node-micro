@@ -15,6 +15,8 @@ const closeServer = (server) => {
 const MICRO_VALIDATE = join(__dirname, 'fixtures/micro-validate/')
 
 test('Check allowUnkown', async (t) => {
+	const env = process.env.NODE_ENV
+	process.env.NODE_ENV = 'production'
 	stdMock.use()
 	const { app, server } = await n9Micro({
 		path: MICRO_VALIDATE,
@@ -63,4 +65,5 @@ test('Check allowUnkown', async (t) => {
 	const output = stdMock.flush()
 	// Close server
 	await closeServer(server)
+	process.env.NODE_ENV = env
 })
